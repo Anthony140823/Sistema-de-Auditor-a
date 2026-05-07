@@ -122,31 +122,6 @@ export default function AuditDetail() {
         },
     });
 
-    const createFinding = useMutation({
-        mutationFn: (conflict: Conflict) => {
-            const userLabel = conflict.user_name || conflict.user_id || conflict.sap_user_id;
-            const ruleLabel = conflict.rule_name || conflict.rule_id;
-            return findingsApi.create({
-                audit_id: id,
-                conflict_id: conflict.id,
-                title: `Conflicto SoD: ${userLabel} | ${ruleLabel}`,
-                description: `Hallazgo generado desde conflicto SoD. Risk Score: ${conflict.risk_score}`,
-            });
-        },
-        onSuccess: () => {
-            setFindingFeedbackType('success');
-            setFindingFeedback('Hallazgo creado correctamente.');
-            queryClient.invalidateQueries({ queryKey: ['findings'] });
-            queryClient.invalidateQueries({ queryKey: ['findings-by-audit', id] });
-            setTimeout(() => setFindingFeedback(''), 3000);
-        },
-        onError: () => {
-            setFindingFeedbackType('error');
-            setFindingFeedback('No se pudo crear el hallazgo.');
-            setTimeout(() => setFindingFeedback(''), 3000);
-        },
-    });
-
     const bulkCreateFindings = useMutation({
         mutationFn: async () => {
             const missing = conflicts.filter((c) => !existingFindingConflictIds.has(c.id));
