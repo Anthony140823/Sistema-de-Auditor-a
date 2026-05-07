@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.git
+.gitignore
+debug_*.py
+debug_*.txt
+seed_log*.txt
+backend_log.txt
+*.egg-info
