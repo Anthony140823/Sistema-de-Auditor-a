@@ -50,12 +50,11 @@ def suggest_mitigation(
     - Transacciones que tiene del Set B (Causa 2): {conflict.tcodes_set_b}
 
     Tu tarea es proponer un Plan de Mitigación o Controles Compensatorios para este caso específico.
-    El tono debe ser profesional, directo y estructurado en Markdown.
-    Incluye:
-    1. Análisis breve del riesgo (por qué estas transacciones juntas son peligrosas).
-    2. Recomendación de remediación técnica (ej. qué roles o tcodes quitar).
-    3. Controles compensatorios propuestos (si el negocio exige que el usuario mantenga el acceso).
-    Sea conciso.
+    REGLA ESTRICTA: Ve directo al punto. SIN saludos ni introducciones. SIN formato Markdown (no uses asteriscos ni hashtags).
+    Usa máximo 3 viñetas con un guión (-) al inicio de cada línea.
+    1. Breve causa técnica.
+    2. Recomendación de remediación.
+    3. Control compensatorio.
     """
     
     try:
@@ -109,13 +108,13 @@ def generate_audit_summary(
     Top Reglas SoD Violadas:
     {top_rules_text}
     
-    Tu tarea es redactar un resumen ejecutivo profesional y estructurado en Markdown.
-    Incluye:
-    1. Conclusión General sobre el estado de la seguridad de accesos.
-    2. Riesgos Clave identificados (basado en el Top de Reglas violadas).
-    3. Siguientes Pasos Recomendados para la Gerencia.
-    El lenguaje debe ser claro para nivel gerencial (sin demasiados tecnicismos de SAP TCodes).
-    Sea directo y persuasivo.
+    Tu tarea es redactar un resumen ejecutivo profesional.
+    REGLA ESTRICTA: Ve directo al punto. SIN saludos ni introducciones. SIN formato Markdown (no uses asteriscos ni hashtags).
+    Usa máximo 3 viñetas con un guión (-) al inicio de cada línea.
+    1. Conclusión General del riesgo.
+    2. Reglas clave violadas.
+    3. Siguientes pasos para la gerencia.
+    Sea extremadamente directo y conciso.
     """
     
     try:
