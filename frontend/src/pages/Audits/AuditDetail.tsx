@@ -5,7 +5,7 @@ import { auditsApi } from '@/api/audits';
 import { sodApi } from '@/api/sod';
 import { findingsApi } from '@/api/findings';
 import { reportsApi } from '@/api/reports';
-import type { Conflict, ConflictDetectionResponse, ConflictDetectionProgress, ImportValidationResult } from '@/types';
+import type { ConflictDetectionResponse, ConflictDetectionProgress, ImportValidationResult } from '@/types';
 import {
     Bar,
     BarChart,
