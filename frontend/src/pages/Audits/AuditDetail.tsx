@@ -5,6 +5,7 @@ import { auditsApi } from '@/api/audits';
 import { sodApi } from '@/api/sod';
 import { findingsApi } from '@/api/findings';
 import { reportsApi } from '@/api/reports';
+import { aiApi } from '@/api/ai';
 import type { ConflictDetectionResponse, ConflictDetectionProgress, ImportValidationResult } from '@/types';
 import {
     Bar,
@@ -36,6 +37,9 @@ export default function AuditDetail() {
     const [detectResult, setDetectResult] = useState<ConflictDetectionResponse | null>(null);
     const [findingFeedback, setFindingFeedback] = useState<string>('');
     const [findingFeedbackType, setFindingFeedbackType] = useState<'success' | 'error'>('success');
+    const [aiModalOpen, setAiModalOpen] = useState(false);
+    const [aiModalTitle, setAiModalTitle] = useState('');
+    const [aiModalContent, setAiModalContent] = useState('');
 
     const { data: audit } = useQuery({
         queryKey: ['audit', id],
@@ -152,6 +156,28 @@ export default function AuditDetail() {
             setFindingFeedback('No se pudieron crear los hallazgos.');
             setTimeout(() => setFindingFeedback(''), 3000);
         },
+    });
+
+    const aiSummaryMutation = useMutation({
+        mutationFn: () => aiApi.getExecutiveSummary(id),
+        onMutate: () => {
+            setAiModalTitle('Resumen Ejecutivo (IA)');
+            setAiModalContent('Generando resumen... ⏳');
+            setAiModalOpen(true);
+        },
+        onSuccess: (data) => setAiModalContent(data),
+        onError: (err: any) => setAiModalContent('Error al generar el resumen: ' + (err.message || 'Desconocido')),
+    });
+
+    const aiMitigationMutation = useMutation({
+        mutationFn: (conflictId: string) => aiApi.getMitigationPlan(conflictId),
+        onMutate: () => {
+            setAiModalTitle('Plan de Mitigación (IA)');
+            setAiModalContent('Analizando conflicto y generando recomendaciones... ⏳');
+            setAiModalOpen(true);
+        },
+        onSuccess: (data) => setAiModalContent(data),
+        onError: (err: any) => setAiModalContent('Error al analizar el conflicto: ' + (err.message || 'Desconocido')),
     });
 
     const highRisk = useMemo(() => conflicts.filter(c => c.risk_score >= 80).length, [conflicts]);
@@ -300,6 +326,9 @@ export default function AuditDetail() {
                     <p className="text-gray-600 mt-1">{audit?.company_name}</p>
                 </div>
                 <div className="flex gap-2">
+                    <button className="btn btn-secondary bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100" onClick={() => aiSummaryMutation.mutate()} disabled={aiSummaryMutation.isPending || conflicts.length === 0}>
+                        🤖 IA Resumen
+                    </button>
                     <button className="btn btn-secondary" onClick={() => reportsApi.exportConflictsExcel(id)}>Excel Conflictos</button>
                     <button className="btn btn-secondary" onClick={() => reportsApi.exportExecutivePdf(id)}>Reporte PDF</button>
                     <button className="btn btn-primary" onClick={() => detectMutation.mutate()} disabled={!canDetect}>
@@ -583,7 +612,7 @@ export default function AuditDetail() {
                                     <td>{c.rule_name || c.rule_id}</td>
                                     <td>{c.rule_severity}</td>
                                     <td className="font-semibold">{c.risk_score}</td>
-                                    <td>
+                                    <td className="flex items-center gap-2">
                                         {existingFindingConflictIds.has(c.id) ? (
                                             <span className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium border-emerald-200 bg-emerald-50 text-emerald-700">
                                                 Hallazgo creado
@@ -593,6 +622,13 @@ export default function AuditDetail() {
                                                 Pendiente
                                             </span>
                                         )}
+                                        <button 
+                                            className="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-1 rounded hover:bg-indigo-100"
+                                            onClick={() => aiMitigationMutation.mutate(c.id)}
+                                            title="Sugerir plan de mitigación con IA"
+                                        >
+                                            ✨ IA
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
@@ -603,6 +639,26 @@ export default function AuditDetail() {
                     </table>
                 </div>
             </div>
+
+            {/* AI Modal */}
+            {aiModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[80vh] flex flex-col m-4">
+                        <div className="flex items-center justify-between border-b px-6 py-4">
+                            <h3 className="text-lg font-semibold text-gray-900">{aiModalTitle}</h3>
+                            <button className="text-gray-400 hover:text-gray-500" onClick={() => setAiModalOpen(false)}>
+                                ✕
+                            </button>
+                        </div>
+                        <div className="p-6 overflow-y-auto whitespace-pre-wrap text-sm text-gray-700">
+                            {aiModalContent}
+                        </div>
+                        <div className="border-t px-6 py-4 bg-gray-50 flex justify-end rounded-b-lg">
+                            <button className="btn btn-primary" onClick={() => setAiModalOpen(false)}>Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.api import auth, audits, imports, sod, findings, dashboard, reports, users
+from app.api import auth, audits, imports, sod, findings, dashboard, reports, users, ai
 
 
 # Create FastAPI app
@@ -36,6 +36,7 @@ app.include_router(findings.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
 app.include_router(reports.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
+app.include_router(ai.router, prefix="/api")
 
 
 @app.get("/")

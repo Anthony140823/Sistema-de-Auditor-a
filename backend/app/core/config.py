@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     
     # Application
     APP_NAME: str = "SAP SoD Audit System"
+    
+    # AI Integration
+    GEMINI_API_KEY: str | None = None
     APP_VERSION: str = "1.0.0"
     ENVIRONMENT: str = "development"
     
