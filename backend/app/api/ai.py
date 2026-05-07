@@ -45,7 +45,7 @@ def suggest_mitigation(
     - Regla Violada: {rule.name}
     - Nivel de Severidad: {rule.severity}
     - Score de Riesgo: {conflict.risk_score}/100
-    - Usuario SAP: {user.user_id} ({user.name})
+    - Usuario SAP: {user.user_id} ({user.full_name or 'Sin Nombre'})
     - Transacciones que tiene del Set A (Causa 1): {conflict.tcodes_set_a}
     - Transacciones que tiene del Set B (Causa 2): {conflict.tcodes_set_b}
 
