@@ -4,12 +4,18 @@ from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
 # Create SQLAlchemy engine
+connect_args = {}
+# Disable prepared statements for Supabase PgBouncer when using psycopg3
+if "psycopg" in settings.DATABASE_URL or settings.DATABASE_URL.startswith("postgresql"):
+    connect_args["prepare_threshold"] = None
+
 engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,
     pool_size=10,
     max_overflow=20,
-    echo=settings.ENVIRONMENT == "development"
+    echo=settings.ENVIRONMENT == "development",
+    connect_args=connect_args
 )
 
 # Create session factory
