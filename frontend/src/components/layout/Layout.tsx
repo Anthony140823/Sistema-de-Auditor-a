@@ -11,6 +11,7 @@ import {
     X
 } from 'lucide-react';
 import { useState } from 'react';
+import GomezitoAgent from '@/components/assistant/GomezitoAgent';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     const { user, logout } = useAuth();
@@ -105,6 +106,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     {children}
                 </div>
             </main>
+
+            <GomezitoAgent />
         </div>
     );
 }

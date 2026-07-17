@@ -26,7 +26,7 @@ try:
         admin = AppUser(
             username="admin",
             email="admin@besalco.com",
-            password_hash=get_password_hash("admin123!"),
+            password_hash=get_password_hash("Admin123!"),
             full_name="Administrador del Sistema",
             role=UserRole.ADMIN,
             is_active=True
@@ -36,7 +36,7 @@ try:
         print("[OK] Admin user created")
     else:
         print("- Admin user exists, updating password hash for Argon2 compatibility...")
-        admin.password_hash = get_password_hash("admin123!")
+        admin.password_hash = get_password_hash("Admin123!")
         db.commit()
         print("[OK] Admin password updated")
 
@@ -46,7 +46,7 @@ try:
         auditor = AppUser(
             username="auditor",
             email="auditor@besalco.com",
-            password_hash=get_password_hash("auditor123!"),
+            password_hash=get_password_hash("Auditor123!"),
             full_name="Internal Auditor",
             role=UserRole.AUDITOR,
             is_active=True
@@ -56,7 +56,7 @@ try:
         print("[OK] Auditor user created")
     else:
         print("- Auditor user exists, updating password hash...")
-        auditor.password_hash = get_password_hash("auditor123!")
+        auditor.password_hash = get_password_hash("Auditor123!")
         db.commit()
         print("[OK] Auditor password updated")
 
@@ -66,7 +66,7 @@ try:
         responsable = AppUser(
             username="responsable",
             email="responsable@besalco.com",
-            password_hash=get_password_hash("resp123!"),
+            password_hash=get_password_hash("Resp123!"),
             full_name="Area Manager",
             role=UserRole.RESPONSABLE,
             is_active=True
@@ -76,7 +76,7 @@ try:
         print("[OK] Responsable user created")
     else:
         print("- Responsable user exists, updating password hash...")
-        responsable.password_hash = get_password_hash("resp123!")
+        responsable.password_hash = get_password_hash("Resp123!")
         db.commit()
         print("[OK] Responsable password updated")
     

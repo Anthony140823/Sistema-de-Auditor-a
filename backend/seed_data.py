@@ -90,7 +90,12 @@ def seed_users(db):
             db.add(user)
             print(f"  + Created user: {user_data['username']}")
         else:
-            print(f"  - User already exists: {user_data['username']}")
+            existing.email = user_data["email"]
+            existing.password_hash = get_password_hash(user_data["password"])
+            existing.full_name = user_data["full_name"]
+            existing.role = user_data["role"]
+            existing.is_active = True
+            print(f"  - Updated user: {user_data['username']}")
 
     db.commit()
 
@@ -294,4 +299,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
